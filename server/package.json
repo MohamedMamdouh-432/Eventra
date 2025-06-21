@@ -1,0 +1,20 @@
+{
+  "name": "eventra-api",
+  "version": "0.0.1",
+  "description": "Eventra is a full-stack MERN web application designed to help users create, manage, and attend events easily. It supports both organizers and attendees through a role-based system and enables real-time event tracking, registration, and management.",
+  "homepage": "https://github.com/MohamedMamdouh-432/Eventra#readme",
+  "bugs": {
+    "url": "https://github.com/MohamedMamdouh-432/Eventra/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MohamedMamdouh-432/Eventra.git"
+  },
+  "license": "ISC",
+  "author": "Mohamed Mamdouh",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  }
+}
