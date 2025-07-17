@@ -8,7 +8,7 @@ Eventra is a modern, full-stack Event Management System built using the MERN sta
     - Build frontend feature-by-feature as the API becomes available.
     - Deploy All Together
 
-## 🚀 Features
+# 🚀 Features
 
 ### 👥 User Roles
 - **Attendee**: Register for events, view your upcoming schedule

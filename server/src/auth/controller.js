@@ -1,17 +1,16 @@
 const jwt = require('jsonwebtoken')
-const User = require('../models/user_model')
-const AppError = require('../utils/app_error')
+const User = require('../users/model')
+const {ApiError, SendEmail} = require('../utils/utils')
 const { promisify } = require('util')
-const sendEmail = require('../utils/email')
 const Env = require('../config/env')
 
-const authToken = (id) =>
+const getAuthToken = (id) =>
     jwt.sign({ id }, Env.JWT_SECRET, {
         expiresIn: Env.JWT_EXPIRES_IN,
     })
 
 const createSendToken = (user, statusCode, res) => {
-    const token = authToken(user._id)
+    const token = getAuthToken(user._id)
     const cookieOptions = {
         expires: new Date(
             Date.now() + Env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -34,23 +33,6 @@ const createSendToken = (user, statusCode, res) => {
     })
 }
 
-exports.signup = async (req, res, next) => {
-    const newUser = await User.create(req.body)
-    createSendToken(newUser, 201, res)
-}
-
-exports.login = async (req, res, next) => {
-    const { email, password } = req.body
-    if (!email || !password) {
-        return next(new AppError('Please provide email and password!', 400))
-    }
-    const user = await User.findOne({ email }).select('+password')
-    if (!user) return next(new AppError('User is not found', 401))
-    if (!(await user.correctPassword(password, user.password)))
-        return next(new AppError('Incorrect Password', 401))
-    createSendToken(user, 200, res)
-}
-
 exports.protect = async (req, res, next) => {
     let token
     if (
@@ -59,12 +41,12 @@ exports.protect = async (req, res, next) => {
     ) {
         token = req.headers.authorization.split(' ')[1]
     }
-    if (!token) return next(new AppError('You are not logged in!', 401))
+    if (!token) return next(new ApiError('You are not logged in!', 401))
     const decoded = await promisify(jwt.verify)(token, Env.JWT_SECRET)
     const currentUser = await User.findById(decoded.id)
     if (!currentUser)
         return next(
-            new AppError(
+            new ApiError(
                 'The user belonging to this token does no longer exist.',
                 401
             )
@@ -77,7 +59,7 @@ exports.restrictTo = (...roles) => {
     return (req, res, next) => {
         if (!roles.includes(req.user.role)) {
             return next(
-                new AppError(
+                new ApiError(
                     'You do not have permission to perform this action',
                     403
                 )
@@ -88,10 +70,27 @@ exports.restrictTo = (...roles) => {
     }
 }
 
+exports.signup = async (req, res, next) => {
+    const newUser = await User.create(req.body)
+    createSendToken(newUser, 201, res)
+}
+
+exports.login = async (req, res, next) => {
+    const { email, password } = req.body
+    if (!email || !password) {
+        return next(new ApiError('Please provide email and password!', 400))
+    }
+    const user = await User.findOne({ email }).select('+password')
+    if (!user) return next(new ApiError('User is not found', 401))
+    if (!(await user.correctPassword(password, user.password)))
+        return next(new ApiError('Wrong Password', 401))
+    createSendToken(user, 200, res)
+}
+
 exports.forgotPassword = async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email })
     if (!user) {
-        return next(new AppError('There is no user with email address.', 404))
+        return next(new ApiError('There is no user with email address.', 404))
     }
 
     const resetToken = user.createPasswordResetToken()
@@ -120,7 +119,7 @@ exports.forgotPassword = async (req, res, next) => {
         await user.save({ validateBeforeSave: false })
 
         return next(
-            new AppError(
+            new ApiError(
                 'There was an error sending the email. Try again later!'
             ),
             500
@@ -140,7 +139,7 @@ exports.resetPassword = async (req, res, next) => {
     })
 
     if (!user) {
-        return next(new AppError('Token is invalid or has expired', 400))
+        return next(new ApiError('Token is invalid or has expired', 400))
     }
     user.password = req.body.password
     user.passwordConfirm = req.body.passwordConfirm
@@ -157,7 +156,7 @@ exports.updatePassword = async (req, res, next) => {
     if (
         !(await user.correctPassword(req.body.passwordCurrent, user.password))
     ) {
-        return next(new AppError('Your current password is wrong.', 401))
+        return next(new ApiError('Your current password is wrong.', 401))
     }
 
     user.password = req.body.password

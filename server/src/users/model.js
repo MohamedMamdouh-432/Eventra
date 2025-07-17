@@ -8,6 +8,7 @@ const userSchema = new Schema({
         type: String,
         trim: true,
         required: [true, 'A user must have a name'],
+        minlength: [3, 'Too short User name'],
     },
     email: {
         type: String,
@@ -18,8 +19,8 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'guide', 'lead-guide', 'admin'],
-        default: 'user',
+        enum: ['anonymous', 'attende', 'organizer', 'admin'],
+        default: 'attende',
     },
     photo: {
         type: String,
@@ -35,7 +36,7 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: [true, 'A user must have a password'],
-        minlength: 8,
+        minlength: 6,
         select: false,
     },
     passwordConfirm: {
@@ -54,7 +55,7 @@ const userSchema = new Schema({
         default: true,
         select: false,
     },
-})
+}, { timestamps: true })
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next()

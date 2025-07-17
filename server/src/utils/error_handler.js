@@ -31,7 +31,7 @@ function sendError(err, res) {
     }
 }
 
-module.exports = (err, req, res, next) => {
+module.exports = (err, _, res, next) => {
     console.log('Error 💥', err.name)
     err.statusCode = err.statusCode || 500
     err.status = err.status || 'error'

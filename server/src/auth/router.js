@@ -1,16 +1,26 @@
 const Router = require('express').Router()
 const AuthController = require('./controller')
-const {CatchAsyncer} = require('../utils/utils')
+const { CatchAsyncer } = require('../utils/utils')
+const AuthValidator = require('./validator')
 
-Router.post('/signup', CatchAsyncer(AuthController.signup))
-Router.post('/login', CatchAsyncer(AuthController.login))
-Router.post('/forgetpassword', CatchAsyncer(AuthController.forgotPassword))
+Router.post(
+    '/signup',
+    AuthValidator.signupValidator,
+    CatchAsyncer(AuthController.signup)
+)
+
+Router.post(
+    '/login',
+    AuthValidator.loginValidator,
+    CatchAsyncer(AuthController.login)
+)
+Router.post('/forget-password', CatchAsyncer(AuthController.forgotPassword))
 Router.patch(
-    '/resetpassword/:token',
+    '/reset-password/:token',
     CatchAsyncer(AuthController.resetPassword)
 )
 Router.patch(
-    '/updatepassword',
+    '/change-password',
     AuthController.protect,
     CatchAsyncer(AuthController.updatePassword)
 )
