@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const User = require('../users/model')
-const {ApiError, SendEmail} = require('../utils/utils')
+const {ApiError, sendEmail} = require('../utils/utils')
 const { promisify } = require('util')
 const Env = require('../config/env')
 
