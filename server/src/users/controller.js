@@ -7,7 +7,8 @@ exports.getAllUsers = async (req, res, next) => {
         .sort()
         .select()
         .paginate()
-    const users = await apioptions.query
+
+    const users = await apioptions.operation
 
     if (!users) {
         return res.status(404).send({
@@ -25,7 +26,7 @@ exports.getAllUsers = async (req, res, next) => {
 }
 
 exports.getUser = async (req, res, next) => {
-    const user = await User.findOne({ name: req.params.name })
+    const user = await User.findById(req.params.id)
     if (!user) {
         return res.status(404).send({
             status: 'fail',

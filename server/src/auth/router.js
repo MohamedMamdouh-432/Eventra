@@ -8,15 +8,18 @@ Router.post(
     AuthValidator.signupValidator,
     CatchAsyncer(AuthController.signup)
 )
-
 Router.post(
     '/login',
     AuthValidator.loginValidator,
     CatchAsyncer(AuthController.login)
 )
-Router.post('/forget-password', CatchAsyncer(AuthController.forgotPassword))
+Router.post(
+    '/forget-password',
+    AuthValidator.forgetPasswordValidator,
+    CatchAsyncer(AuthController.forgotPassword)
+)
 Router.patch(
-    '/reset-password/:token',
+    '/reset-password',
     CatchAsyncer(AuthController.resetPassword)
 )
 Router.patch(

@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken')
 const User = require('../users/model')
-const {ApiError, sendEmail} = require('../utils/utils')
+const { ApiError, sendEmail, Logger } = require('../utils/utils')
 const { promisify } = require('util')
 const Env = require('../config/env')
+const crypto = require('crypto')
 
 const getAuthToken = (id) =>
     jwt.sign({ id }, Env.JWT_SECRET, {
@@ -57,6 +58,7 @@ exports.protect = async (req, res, next) => {
 
 exports.restrictTo = (...roles) => {
     return (req, res, next) => {
+        Logger.info(req.user)
         if (!roles.includes(req.user.role)) {
             return next(
                 new ApiError(
@@ -93,12 +95,10 @@ exports.forgotPassword = async (req, res, next) => {
         return next(new ApiError('There is no user with email address.', 404))
     }
 
-    const resetToken = user.createPasswordResetToken()
+    const resetToken = user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false })
 
-    const resetURL = `${req.protocol}://${req.get(
-        'host'
-    )}/api/v1/users/resetPassword/${resetToken}`
+    const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`
 
     const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`
 
@@ -130,7 +130,7 @@ exports.forgotPassword = async (req, res, next) => {
 exports.resetPassword = async (req, res, next) => {
     const hashedToken = crypto
         .createHash('sha256')
-        .update(req.params.token)
+        .update(req.query.token)
         .digest('hex')
 
     const user = await User.findOne({
