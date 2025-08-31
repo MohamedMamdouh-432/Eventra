@@ -5,6 +5,7 @@ const helmet = require('helmet')
 const Env = require('./config/env')
 const { ErrorHandler } = require('./utils/utils');
 const AuthRouter = require('./auth/router')
+const UserRouter = require('./users/router')
 
 const app = express()
 app.use(helmet())
@@ -18,6 +19,7 @@ app.use('/api', rateLimit({
 }))
 
 app.use('/api/v1/auth/', AuthRouter);
+app.use('/api/v1/users/', UserRouter);
 
 app.use(ErrorHandler)
 

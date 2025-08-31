@@ -1,11 +1,11 @@
 module.exports = class ApiOptions {
-    constructor(query, queryString) {
+    constructor(operation, query) {
+        this.operation = operation
         this.query = query
-        this.queryString = queryString
     }
 
     filter() {
-        const queryObj = { ...this.queryString }
+        const queryObj = { ...this.query }
         const excludedFields = ['page', 'sort', 'limit', 'fields']
         excludedFields.forEach((el) => delete queryObj[el])
 
@@ -15,56 +15,56 @@ module.exports = class ApiOptions {
             (match) => `$${match}`
         )
 
-        this.query = this.query.find(JSON.parse(queryStr))
+        this.operation = this.operation.find(JSON.parse(queryStr))
 
         return this
     }
 
     sort() {
-        if (this.queryString.sort) {
-            const sortBy = this.queryString.sort.split(',').join(' ')
-            this.query = this.query.sort(sortBy)
+        if (this.query.sort) {
+            const sortBy = this.query.sort.split(',').join(' ')
+            this.operation = this.operation.sort(sortBy)
         } else {
-            this.query = this.query.sort('-createdAt')
+            this.operation = this.operation.sort('-createdAt')
         }
 
         return this
     }
 
-    limitFields() {
-        if (this.queryString.fields) {
-            const fields = this.queryString.fields.split(',').join(' ')
-            this.query = this.query.select(fields)
+    select() {
+        if (this.query.fields) {
+            const fields = this.query.fields.split(',').join(' ')
+            this.operation = this.operation.select(fields)
         } else {
-            this.query = this.query.select('-__v')
+            this.operation = this.operation.select('-__v')
         }
 
         return this
     }
-    
+
     search(modelName) {
-        if (this.queryString.keyword) {
+        if (this.query.keyword) {
             let query = {};
             if (modelName === 'Products') {
                 query.$or = [
-                    { title: { $regex: this.queryString.keyword, $options: 'i' } },
-                    { description: { $regex: this.queryString.keyword, $options: 'i' } },
+                    { title: { $regex: this.query.keyword, $options: 'i' } },
+                    { description: { $regex: this.query.keyword, $options: 'i' } },
                 ];
             } else {
-                query = { name: { $regex: this.queryString.keyword, $options: 'i' } };
+                query = { name: { $regex: this.query.keyword, $options: 'i' } };
             }
 
             this.mongooseQuery = this.mongooseQuery.find(query);
         }
         return this;
-      }
+    }
 
     paginate() {
-        const page = this.queryString.page * 1 || 1
-        const limit = this.queryString.limit * 1 || 100
+        const page = this.query.page * 1 || 1
+        const limit = this.query.limit * 1 || 100
         const skip = (page - 1) * limit
 
-        this.query = this.query.skip(skip).limit(limit)
+        this.operation = this.operation.skip(skip).limit(limit)
 
         return this
     }
