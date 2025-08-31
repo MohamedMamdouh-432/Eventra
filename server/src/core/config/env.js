@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './src/config/config.env' });
+require('dotenv').config({ path: './src/core/config/config.env' });
 
 exports.PORT = process.env.PORT || 5000;
 exports.ENV = process.env.NODE_ENV || 'development';

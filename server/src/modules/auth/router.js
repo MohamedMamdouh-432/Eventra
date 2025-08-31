@@ -1,6 +1,6 @@
 const Router = require('express').Router()
 const AuthController = require('./controller')
-const { CatchAsyncer } = require('../utils/utils')
+const CatchAsyncer = require('../../core/utils/catch_asyncer')
 const AuthValidator = require('./validator')
 
 Router.post(

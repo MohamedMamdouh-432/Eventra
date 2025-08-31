@@ -1,7 +1,8 @@
 const Router = require('express').Router()
 const UserController = require('./controller')
 const AuthController = require('../auth/controller')
-const { CatchAsyncer } = require('../utils/utils')
+const UserValidator = require('./validator')
+const CatchAsyncer = require('../../core/utils/catch_asyncer')
 
 Router.get(
     '/',
@@ -10,8 +11,12 @@ Router.get(
     CatchAsyncer(UserController.getAllUsers)
 )
 Router.route('/:id')
-    .get(CatchAsyncer(UserController.getUser))
-    .patch(CatchAsyncer(UserController.updateUser))
+    .get(CatchAsyncer(UserController.getUserProfile))
+    .patch(
+        UserValidator.updateUserValidator,
+        CatchAsyncer(UserController.updateUserProfile)
+    )
+    .put(CatchAsyncer(UserController.blockUser))
     .delete(CatchAsyncer(UserController.deleteUser))
 
 module.exports = Router

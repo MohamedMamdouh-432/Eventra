@@ -1,8 +1,10 @@
 const jwt = require('jsonwebtoken')
 const User = require('../users/model')
-const { ApiError, sendEmail, Logger } = require('../utils/utils')
+const Logger = require('../../core/utils/logger')
+const sendEmail = require('../../core/utils/send_email')
+const ApiError = require('../../core/utils/api_error')
 const { promisify } = require('util')
-const Env = require('../config/env')
+const Env = require('../../core/config/env')
 const crypto = require('crypto')
 
 const getAuthToken = (id) =>
