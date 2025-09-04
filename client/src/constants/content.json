@@ -1,0 +1,48 @@
+{
+  "signin": {
+    "title": "Sign In to Event Hive",
+    "emailLabel": "YOUR EMAIL",
+    "emailPlaceholder": "Enter your mail",
+    "passwordLabel": "PASSWORD",
+    "passwordPlaceholder": "Enter your password",
+    "forgot": "Forgot your password?",
+    "submit": "Sign In",
+    "or": "Or",
+    "google": "Sign in with Google",
+    "image": {
+      "title": "Hello Friend",
+      "subtitle": "To keep connected with us provide us with your information",
+      "cta": "Signup"
+    },
+    "errors": {
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Please enter a valid email.",
+      "passwordRequired": "Password is required."
+    }
+  },
+  "signup": {
+    "title": "Sign Up to Event Hive",
+    "nameLabel": "YOUR NAME",
+    "namePlaceholder": "Enter your name",
+    "passwordLabel": "PASSWORD",
+    "passwordPlaceholder": "Enter your password",
+    "confirmLabel": "CONFIRM PASSWORD",
+    "confirmPlaceholder": "Confirm your password",
+    "submit": "Sign Up",
+    "or": "Or",
+    "google": "Sign up with Google",
+    "image": {
+      "title": "Welcome back",
+      "subtitle": "To keep connected with us provide us with your information",
+      "cta": "Signin"
+    },
+    "errors": {
+      "nameRequired": "Name is required.",
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Please enter a valid email.",
+      "passwordRequired": "Password is required.",
+      "confirmRequired": "Please confirm your password.",
+      "passwordsMismatch": "Passwords do not match."
+    }
+  }
+}
