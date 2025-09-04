@@ -2,10 +2,11 @@ const express = require('express')
 const morgan = require('morgan')
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
-const Env = require('./config/env')
-const { ErrorHandler } = require('./utils/utils');
-const AuthRouter = require('./auth/router')
-const UserRouter = require('./users/router')
+const Env = require('./core/config/env')
+const ErrorHandler = require('./core/utils/error_handler')
+const AuthRouter = require('./modules/auth/router')
+const UserRouter = require('./modules/users/router')
+const CommunityRouter = require('./modules/communities/router')
 
 const app = express()
 app.use(helmet())
@@ -20,6 +21,7 @@ app.use('/api', rateLimit({
 
 app.use('/api/v1/auth/', AuthRouter);
 app.use('/api/v1/users/', UserRouter);
+app.use('/api/v1/communities/', CommunityRouter);
 
 app.use(ErrorHandler)
 

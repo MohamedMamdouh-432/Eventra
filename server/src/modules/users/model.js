@@ -22,17 +22,7 @@ const userSchema = new Schema({
         enum: ['anonymous', 'attende', 'organizer', 'admin'],
         default: 'attende',
     },
-    photo: {
-        type: String,
-        validate: {
-            validator: function (photoStr) {
-                let allowedExtensions = ['jpg', 'jpeg', 'png', 'svg', 'avif']
-                let photoExtension = photoStr.split('.').pop()
-                return allowedExtensions.includes(photoExtension)
-            },
-            message: 'Only Allowed Extensions: [jpg, jpeg, png, svg, avif]',
-        },
-    },
+    photo: String,
     password: {
         type: String,
         required: [true, 'A user must have a password'],
@@ -52,8 +42,7 @@ const userSchema = new Schema({
     passwordResetExpires: Date,
     active: {
         type: Boolean,
-        default: true,
-        select: false,
+        default: true
     },
 }, { timestamps: true })
 
@@ -67,11 +56,6 @@ userSchema.pre('save', async function (next) {
 userSchema.pre('save', function (next) {
     if (!this.isModified('password') || this.isNew) return next()
     this.passwordChangedAt = Date.now() - 1000
-    next()
-})
-
-userSchema.pre(/^find/, function (next) {
-    this.find({ active: { $ne: false } })
     next()
 })
 
