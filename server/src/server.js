@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const Env = require('./config/env')
+const Env = require('./core/config/env')
 const app = require('./app')
 
 const dbUrl = Env.DB_URL.replace('<password>', Env.PASSWORD);

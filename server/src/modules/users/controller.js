@@ -1,5 +1,5 @@
 const User = require('./model')
-const { ApiOptions } = require('../utils/utils')
+const ApiOptions = require('../../core/utils/api_options')
 
 exports.getAllUsers = async (req, res, next) => {
     const apioptions = new ApiOptions(User.find(), req.query)
@@ -7,7 +7,8 @@ exports.getAllUsers = async (req, res, next) => {
         .sort()
         .select()
         .paginate()
-    const users = await apioptions.query
+
+    const users = await apioptions.operation
 
     if (!users) {
         return res.status(404).send({
@@ -24,8 +25,8 @@ exports.getAllUsers = async (req, res, next) => {
     })
 }
 
-exports.getUser = async (req, res, next) => {
-    const user = await User.findOne({ name: req.params.name })
+exports.getUserProfile = async (req, res, next) => {
+    const user = await User.findById(req.params.id)
     if (!user) {
         return res.status(404).send({
             status: 'fail',
@@ -40,21 +41,14 @@ exports.getUser = async (req, res, next) => {
     })
 }
 
-exports.createUser = async (req, res, next) => {
-    const newUser = await User.create(req.body)
-    res.status(201).send({
-        status: 'success',
-        message: 'Created new user!',
-        data: {
-            user: newUser,
-        },
-    })
-}
-
-exports.updateUser = async (req, res, next) => {
-    const updatedUser = await User.findOneAndUpdate(
-        { name: req.params.name },
-        req.body
+exports.updateUserProfile = async (req, res, next) => {
+    const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {
+            new: true,
+            runValidators: true,
+        }
     )
     if (!updatedUser) {
         return res.status(404).send({
@@ -65,13 +59,22 @@ exports.updateUser = async (req, res, next) => {
     res.status(201).send({
         status: 'success',
         message: 'User successfully updated!',
+        data: {
+            user: updatedUser,
+        },
+    })
+}
+
+exports.blockUser = async (req, res, next) => {
+    await User.findByIdAndUpdate(req.params.id, { active: false })
+    res.status(200).send({
+        status: 'success',
+        message: 'User successfully blocked!',
     })
 }
 
 exports.deleteUser = async (req, res, next) => {
-    const deleteResult = await User.findOneAndDelete({
-        name: req.params.name,
-    })
+    const deleteResult = await User.findByIdAndDelete(req.params.id)
     if (!deleteResult.deletedCount) {
         return res.status(404).send({
             status: 'fail',
