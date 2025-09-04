@@ -1,0 +1,9 @@
+{
+    "files": [],
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "jsxImportSource": "@emotion/react",
+        "types": ["@emotion/react/types/css-prop"]
+    },
+    "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
+}
