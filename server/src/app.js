@@ -1,32 +1,37 @@
-const express = require('express')
-const morgan = require('morgan')
-const rateLimit = require('express-rate-limit')
-const helmet = require('helmet')
-const Env = require('./core/config/env')
-const ErrorHandler = require('./core/utils/error_handler')
-const AuthRouter = require('./modules/auth/router')
-const UserRouter = require('./modules/users/router')
-const CommunityRouter = require('./modules/communities/router')
+const express = require("express");
+const morgan = require("morgan");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+const Env = require("./core/config/env");
+const ErrorHandler = require("./core/utils/error_handler");
+const AuthRouter = require("./modules/auth/router");
+const UserRouter = require("./modules/users/router");
+const CommunityRouter = require("./modules/communities/router");
+const CORS = require("cors");
 
-const app = express()
-app.use(helmet())
-if (Env.ENV == 'development') app.use(morgan('dev'))
-app.use(express.json({ limit: '10kb' }))
+const app = express();
+app.use(helmet());
+if (Env.ENV == "development") app.use(morgan("dev"));
+app.use(express.json({ limit: "10kb" }));
+app.use(CORS());
 
-app.use('/api', rateLimit({
-    max: 100,
-    windowMs: 60 * 60 * 1000,
-    message: 'Too many requests from this IP, please try again in an hour!',
-}))
+app.use(
+    "/api",
+    rateLimit({
+        max: 100,
+        windowMs: 60 * 60 * 1000,
+        message: "Too many requests from this IP, please try again in an hour!",
+    })
+);
 
-app.use('/api/v1/auth/', AuthRouter);
-app.use('/api/v1/users/', UserRouter);
-app.use('/api/v1/communities/', CommunityRouter);
+app.use("/api/v1/auth/", AuthRouter);
+app.use("/api/v1/users/", UserRouter);
+app.use("/api/v1/communities/", CommunityRouter);
 
-app.use(ErrorHandler)
+app.use(ErrorHandler);
 
 // app.all('*', (req, res, next) => {
 //     next(new ApiError(`Can't find ${req.originalUrl} on this server!`, 404));
 // });
 
-module.exports = app
+module.exports = app;

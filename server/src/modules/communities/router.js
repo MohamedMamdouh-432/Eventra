@@ -1,9 +1,13 @@
 const Router = require('express').Router()
 const CommunityController = require('./controller')
+const CommunityValidator = require('./validator')
 const CatchAsyncer = require('../../core/utils/catch_asyncer')
 
 Router.route('/')
-    .post(CatchAsyncer(CommunityController.createCommunity))
+    .post(
+        CommunityValidator.createCommunityValidator,
+        CatchAsyncer(CommunityController.createCommunity)
+    )
     .get(CatchAsyncer(CommunityController.getAllCommunities))
 Router.route('/:id')
     .get(CatchAsyncer(CommunityController.getCommunityDetails))

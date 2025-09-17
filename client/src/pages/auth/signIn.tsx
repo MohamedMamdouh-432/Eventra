@@ -40,6 +40,8 @@ export default function SignIn() {
       return; 
     }
 
+    console.log(res);
+    
     localStorage.setItem("token", token);
     navigate("/");
   } catch (err: any) {

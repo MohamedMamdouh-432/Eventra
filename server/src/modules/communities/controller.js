@@ -1,5 +1,6 @@
 const Community = require('./model')
 const ApiOptions = require('../../core/utils/api_options')
+const logger = require('../../core/utils/logger')
 
 exports.createCommunity = async (req, res, next) => {
     const newCommunity = await Community.create(req.body)
@@ -81,8 +82,9 @@ exports.blockCommunity = async (req, res, next) => {
 }
 
 exports.deleteCommunity = async (req, res, next) => {
-    const deleteResult = await Community.findByIdAndDelete(req.params.id)
-    if (!deleteResult.deletedCount) {
+    const deleteCommunity = await Community.findByIdAndDelete(req.params.id)
+    logger.debug(`Deleting community Result: ${deleteCommunity}`);
+    if (!deleteCommunity) {
         return res.status(404).send({
             status: 'fail',
             message: 'Community not found!',
