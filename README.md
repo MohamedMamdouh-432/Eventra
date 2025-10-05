@@ -3,10 +3,12 @@
 ### Eventra is a modern, full-stack Event Management System built using the MERN stack (MongoDB, Express.js, React, Node.js). It allows users to discover, register, and organize events — whether it's a local meetup, a concert, a tech workshop, or a conference.
 
 ## Ⓜ️ Modules
-    Authentication  Communities
-    Users           Chats  
-    Events          Notifications
-    Registration    Tickets
+    Authentication  Chats
+    Users           Notifications (Emails)
+    Communities
+    Events          
+    Registration    
+    Tickets
 
 ## 🚀 Features
 

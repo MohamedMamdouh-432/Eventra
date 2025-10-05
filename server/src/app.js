@@ -2,12 +2,14 @@ const express = require("express");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
+const CORS = require("cors");
+
 const Env = require("./core/config/env");
 const ErrorHandler = require("./core/utils/error_handler");
 const AuthRouter = require("./modules/auth/router");
 const UserRouter = require("./modules/users/router");
 const CommunityRouter = require("./modules/communities/router");
-const CORS = require("cors");
+const EventRouter = require("./modules/events/router");
 
 const app = express();
 app.use(helmet());
@@ -27,6 +29,7 @@ app.use(
 app.use("/api/v1/auth/", AuthRouter);
 app.use("/api/v1/users/", UserRouter);
 app.use("/api/v1/communities/", CommunityRouter);
+app.use("/api/v1/events/", EventRouter);
 
 app.use(ErrorHandler);
 
